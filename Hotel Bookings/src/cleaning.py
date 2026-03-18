@@ -26,6 +26,9 @@ def clean_hotel_data(df: pd.DataFrame) -> pd.DataFrame:
     # Fix missing values
     if "children" in df.columns:
         df["children"] = df["children"].fillna(0)
+    
+    if "country" in df.columns:
+        df["country"] = df["country"].fillna("Unnamed")
 
     # Ensure target exists
     if "iscanceled" not in df.columns:
@@ -34,8 +37,8 @@ def clean_hotel_data(df: pd.DataFrame) -> pd.DataFrame:
     # Convert target to int
     df["iscanceled"] = df["iscanceled"].astype(int)
 
-    # Remove rows missing adr
+    # Remove rows missing adr and remove negative adr values
     if "adr" in df.columns:
-        df = df[df["adr"].notna()]
+        df = df[df["adr"].notna() & (df["adr"] >= 0)]
 
     return df
