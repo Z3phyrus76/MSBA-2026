@@ -18,6 +18,7 @@ Makes the project reusable and structured.
 import pandas as pd
 
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, roc_auc_score, classification_report
 
@@ -61,11 +62,19 @@ def run_logistic(df: pd.DataFrame, feature_cols: list[str], seed: int = 206) -> 
         X, y, test_size=0.25, random_state=seed, stratify=y
     )
 
+    
+    #Scaler fitted
+    scaler = StandardScaler()
     model = LogisticRegression(max_iter=2000)
-    model.fit(X_train, y_train)
 
-    preds = model.predict(X_test)
-    probs = model.predict_proba(X_test)[:, 1]
+    #Scaled data
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+    
+    #Predicted and trained on scaled data
+    model.fit(X_train_scaled, y_train)
+    preds = model.predict(X_test_scaled)
+    probs = model.predict_proba(X_test_scaled)[:, 1]
 
     # ROC AUC can fail if y_test has only one class
     roc_auc = None
