@@ -20,15 +20,10 @@ def clean_hotel_data(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.copy()
 
-    # Basic sanity check
-    if df.empty:
-        raise ValueError("Input dataframe is empty.")
-        
-    
     # Make column names consistent
     df.columns = df.columns.str.lower()
 
-    # Replace missing children values with 0 (assume no children if missing)
+    # Fix missing values
     if "children" in df.columns:
         df["children"] = df["children"].fillna(0)
     
